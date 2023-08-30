@@ -1,0 +1,81 @@
+import torch
+import torchvision
+import torchvision.transforms as transforms
+import torch.nn.functional as F
+from torch.utils.data import DataLoader
+import argparse
+import datetime
+
+from model import MyModel
+from dataset_inference import Dataset
+
+parser = argparse.ArgumentParser(description='')
+parser.add_argument('--img_dir', default='./images/images', help='Images directory')
+parser.add_argument('--test_file', default='./test.csv', help='Test File')
+parser.add_argument('--batch_size', default=16, help='Batch size')
+parser.add_argument('--model_file', default='./weights_epoch_100.pt', help='Batch size')
+
+FLAGS = parser.parse_args()
+
+# Set device
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+# Define hyperparameters
+batch_size = FLAGS.batch_size
+
+# Define transforms
+transform = transforms.Compose([
+    transforms.Resize((224, 224)),
+    transforms.Normalize((0.62376275, 0.43274997, 0.64434578), (0.2201862, 0.23024299, 0.19410873))
+])
+
+# Define dataset and dataloader
+test_dataset = Dataset(annotations_file= FLAGS.test_file, img_dir= FLAGS.img_dir, transform=transform)
+test_dataloader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
+
+# Initialize the model and load the saved weights
+model = MyModel(num_classes=2).to(device)
+model.load_state_dict(torch.load(FLAGS.model_file,  map_location=torch.device('cpu')))  
+
+# Initialize lists to store the test results
+test_results = []
+
+# Create log file with timestamp
+# /Users/ardaatik/Desktop/my_projects/classification/weights__20230802_133002_epoch_100.pt
+model_id = FLAGS.model_file.split('__')[-1][:-3]
+log_file_name = f"test_log__{model_id}.csv" 
+log_file = open(log_file_name, "w") 
+# write the header
+log_file.write("img_id,cancer_score\n")
+
+# Evaluation mode
+model.eval()
+with torch.no_grad():
+    for i, (images, img_ids) in enumerate(test_dataloader):
+        # Move validation images and labels to device
+        images = images.to(device)
+
+        # Forward pass 
+        test_outputs = model(images)
+        normalized_output = F.softmax(test_outputs, 1)
+        
+        for j in range(len(img_ids)):
+            temp_img_id = img_ids[j]
+            temp_score = normalized_output[j]        
+            log_file.write(f'{temp_img_id},{temp_score[1]}\n')
+
+
+# Close the log file
+log_file.close()
+
+
+
+
+
+# test id, kanser olasılık, normal olasılık column olarak çıkaracak.
+# model weightlerini 10 epochta bir kaydet training esnasında. bunun üstüne valid loss iyileşince weightleri kaydet.
+# batch size değişimine göre grafikler nasıl değişiyor 16 32 64 128 aynı şekilde learning rate değişimi analiz
+# argparse librarysinde argumentleri terminalden belirlemeli ayarla
+# conv layerlerde 32 64 kısımlarını 16 ve 64 olarak değiştirip çalıştır.
+# test 2.versiyonu valid dosyasını çalıştırarak grand truth içerecek şekilde output versin. 
+# test 2. versiyonu için obtain_performance_metrics.py hazırla. çıkan text dosyasını okuyup confusiyon matrix oluşturacak roc corve çizecek alan hesaplayacak hepsini kaydedecek ve bir dosyaya yazacak resim olarak kaydedecek plotları
