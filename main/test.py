@@ -67,15 +67,3 @@ with torch.no_grad():
 
 # Close the log file
 log_file.close()
-
-
-
-
-
-# test id, kanser olasılık, normal olasılık column olarak çıkaracak.
-# model weightlerini 10 epochta bir kaydet training esnasında. bunun üstüne valid loss iyileşince weightleri kaydet.
-# batch size değişimine göre grafikler nasıl değişiyor 16 32 64 128 aynı şekilde learning rate değişimi analiz
-# argparse librarysinde argumentleri terminalden belirlemeli ayarla
-# conv layerlerde 32 64 kısımlarını 16 ve 64 olarak değiştirip çalıştır.
-# test 2.versiyonu valid dosyasını çalıştırarak grand truth içerecek şekilde output versin. 
-# test 2. versiyonu için obtain_performance_metrics.py hazırla. çıkan text dosyasını okuyup confusiyon matrix oluşturacak roc corve çizecek alan hesaplayacak hepsini kaydedecek ve bir dosyaya yazacak resim olarak kaydedecek plotları
