@@ -1,7 +1,11 @@
 # Histopathology Cancer Detection with ResNet-18 & Grad-CAM
 
 [![Tests](https://github.com/ardaatikk/histopathology-cancer-detection/actions/workflows/tests.yml/badge.svg)](https://github.com/ardaatikk/histopathology-cancer-detection/actions/workflows/tests.yml)
-[![Python](https://img.shields.io/badge/Python-3.11-blue.svg)](https://www.python.org/)
+[![Python](https://img.shields.io/badge/Python-3.11-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![PyTorch](https://img.shields.io/badge/PyTorch-Framework-EE4C2C?logo=pytorch&logoColor=white)](https://pytorch.org/)
+[![ResNet-18](https://img.shields.io/badge/Architecture-ResNet--18-7952B3)](https://arxiv.org/abs/1512.03385)
+[![Grad-CAM](https://img.shields.io/badge/Explainability-Grad--CAM-008080)](https://arxiv.org/abs/1610.02391)
+[![Integrated Gradients](https://img.shields.io/badge/Explainability-Integrated%20Gradients-9B59B6)](https://arxiv.org/abs/1703.01365)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 Deep learning pipeline for detecting **breast cancer metastasis in lymph node histopathology images** using **transfer learning with an ImageNet-pretrained ResNet-18**, with quantitative evaluation and Grad-CAM explainability.
